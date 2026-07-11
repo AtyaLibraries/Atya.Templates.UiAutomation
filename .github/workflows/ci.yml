@@ -53,4 +53,4 @@ jobs:
         with:
           global-json-file: global.json
       - name: Pack (verification only)
-        run: dotnet pack Atya.Templates.UiAutomation.csproj -p:PackageVersion=0.0.0-ci -o artifacts/pack
+        run: dotnet pack Atya.Templates.UiAutomation.csproj -p:MinVerVersionOverride=0.0.0-ci -o artifacts/pack
