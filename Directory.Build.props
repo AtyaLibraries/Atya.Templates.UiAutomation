@@ -1,0 +1,44 @@
+<Project>
+
+  <!--
+    Content build settings for the generated UI-automation solution.
+
+    The guard skips the template-package project (Atya.Templates.*) that packs
+    this tree; every project in a *generated* consumer solution matches the
+    condition (none of them start with "Atya.Templates"), so the settings apply
+    there. Plain Microsoft.NET.Sdk is used everywhere — NOT Atya.Build.Sdk — per
+    docs/architecture.md Section 31.3.
+  -->
+  <PropertyGroup Condition="!$(MSBuildProjectName.StartsWith('Atya.Templates'))">
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <Deterministic>true</Deterministic>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <!--
+      AD0001 = an analyzer threw. The StyleCop build inside Atya.Governance.CodeQuality is
+      tuned to run under Atya.Build.Sdk; used standalone on plain Microsoft.NET.Sdk (Section
+      31.3) its layout rules throw on some .NET 10 / C# 14 syntax. Those crash reports are
+      suppressed so they cannot fail the build; the .NET correctness analyzers (CA*) stay on.
+    -->
+    <NoWarn>$(NoWarn);AD0001</NoWarn>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <NuGetAudit>true</NuGetAudit>
+    <NuGetAuditMode>all</NuGetAuditMode>
+  </PropertyGroup>
+
+  <!--
+    Default Atya dependency (docs/architecture.md Section 31.4): analyzers only,
+    PrivateAssets="all" so it never becomes a runtime/package dependency. This is
+    the single Atya package the generated solution takes by default and satisfies
+    the Phase 1 "analyzers and coding standards" requirement (Section 29).
+  -->
+  <ItemGroup Condition="!$(MSBuildProjectName.StartsWith('Atya.Templates'))">
+    <PackageReference Include="Atya.Governance.CodeQuality" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

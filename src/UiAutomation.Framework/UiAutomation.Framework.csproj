@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>UiAutomation.Framework</RootNamespace>
+    <AssemblyName>UiAutomation.Framework</AssemblyName>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="UiAutomation.Framework.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Playwright" />
+    <PackageReference Include="Microsoft.Playwright.Xunit.v3" />
+    <!-- Library-facing xUnit v3 types only (TestContext, IAsyncLifetime, attributes);
+         NOT the full runner, which would force OutputType=Exe on this library. -->
+    <PackageReference Include="xunit.v3.extensibility.core" />
+    <!-- Dynamic skip (Assert.Skip) for capability gating (Section 6.3). -->
+    <PackageReference Include="xunit.v3.assert" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" />
+  </ItemGroup>
+
+</Project>

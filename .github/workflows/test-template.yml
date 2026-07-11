@@ -1,0 +1,57 @@
+name: Test template
+
+on:
+  push:
+    branches: [development, master]
+  pull_request:
+    branches: [development, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Full template validation (docs/architecture.md STEP 4): pack -> install -> instantiate ->
+# restore (locked) -> build -> run the generated solution's framework unit + permutation +
+# chromium mechanics + spike suites.
+jobs:
+  instantiate-and-verify:
+    name: Instantiate + build + test generated solution
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Pack the template
+        run: dotnet pack Atya.Templates.UiAutomation.csproj -p:PackageVersion=0.0.0-test -o artifacts/pack
+
+      - name: Install the template from the produced nupkg
+        run: dotnet new install artifacts/pack/Atya.Templates.UiAutomation.0.0.0-test.nupkg
+
+      - name: Instantiate
+        run: dotnet new atya-ui-automation --name Sample.App.UiAutomation --output artifacts/sample --skipRestore
+
+      - name: Restore generated solution (locked)
+        working-directory: artifacts/sample
+        run: dotnet restore --locked-mode
+
+      - name: Build generated solution
+        working-directory: artifacts/sample
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Install Playwright chromium
+        working-directory: artifacts/sample
+        run: pwsh tests/Sample.App.UiAutomation.Tests/bin/Release/net10.0/playwright.ps1 install chromium --with-deps
+
+      - name: Framework tests + Phase 1 spike checks (chromium)
+        working-directory: artifacts/sample
+        run: >
+          dotnet test tests/Sample.App.UiAutomation.Framework.Tests/Sample.App.UiAutomation.Framework.Tests.csproj
+          --configuration Release --no-build
+          --filter-not-trait "RequiresApplication=true"
+          --report-trx --minimum-expected-tests 1
+        env:
+          TEST_PROFILE: chromium-headless

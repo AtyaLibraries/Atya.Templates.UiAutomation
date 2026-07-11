@@ -1,0 +1,111 @@
+# UI automation smoke pipeline (docs/architecture.md Section 25). Phase 1 is chromium-only;
+# the browser matrix is Phase 3. Native .NET 10 Microsoft Testing Platform mode is selected
+# via global.json: test projects are passed with --project and MTP options are passed directly.
+trigger:
+  branches:
+    include:
+      - main
+
+parameters:
+  - name: testEnvironment
+    displayName: Test Environment
+    type: string
+    default: qa
+    values: [dev, qa, uat]
+
+  - name: executionProfile
+    displayName: Execution Profile
+    type: string
+    default: chromium-headless
+    values: [chromium-headless]
+
+  - name: category
+    displayName: Test Category
+    type: string
+    default: Smoke
+    values: [Smoke, Regression, CriticalPath]
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  buildConfiguration: Release
+  resultsDirectory: $(Build.SourcesDirectory)/TestResults
+
+steps:
+  - task: UseDotNet@2
+    displayName: Install .NET SDK
+    inputs:
+      packageType: sdk
+      useGlobalJson: true
+
+  - script: dotnet --info
+    displayName: Print .NET information
+
+  - script: dotnet restore --locked-mode
+    displayName: Restore (locked)
+
+  - script: dotnet build --configuration $(buildConfiguration) --no-restore
+    displayName: Build
+
+  - script: >
+      pwsh
+      tests/UiAutomation.Tests/bin/$(buildConfiguration)/net10.0/playwright.ps1
+      install chromium --with-deps
+    displayName: Install Playwright chromium
+
+  # Framework stage: unit permutation suite + browser mechanics + spike checks. Application-
+  # dependent tests are excluded here (they need a reachable app).
+  - script: >
+      dotnet test
+      --project tests/UiAutomation.Framework.Tests/UiAutomation.Framework.Tests.csproj
+      --configuration $(buildConfiguration)
+      --no-build
+      --results-directory "$(resultsDirectory)/framework"
+      --filter-not-trait "RequiresApplication=true"
+      --report-trx
+      --minimum-expected-tests 1
+    displayName: Run framework tests (unit + mechanics + spike)
+    env:
+      TEST_PROFILE: ${{ parameters.executionProfile }}
+
+  - script: >
+      dotnet run
+      --project tools/UiAutomation.Preflight/UiAutomation.Preflight.csproj
+      --configuration $(buildConfiguration)
+      --no-build
+    displayName: Environment health check (preflight)
+    env:
+      TEST_ENV: ${{ parameters.testEnvironment }}
+      TEST_PROFILE: ${{ parameters.executionProfile }}
+
+  - script: >
+      dotnet test
+      --project tests/UiAutomation.Tests/UiAutomation.Tests.csproj
+      --configuration $(buildConfiguration)
+      --no-build
+      --results-directory "$(resultsDirectory)/ui"
+      --filter-trait "Category=${{ parameters.category }}"
+      --filter-not-trait "Stability=FlakyCandidate"
+      --report-trx
+      --minimum-expected-tests 1
+    displayName: Run UI tests
+    condition: succeededOrFailed()
+    env:
+      TEST_ENV: ${{ parameters.testEnvironment }}
+      TEST_PROFILE: ${{ parameters.executionProfile }}
+
+  - task: PublishTestResults@2
+    displayName: Publish test results
+    condition: always()
+    inputs:
+      testResultsFormat: VSTest
+      testResultsFiles: "$(resultsDirectory)/**/*.trx"
+      failTaskOnFailedTests: true
+
+  - task: PublishPipelineArtifact@1
+    displayName: Publish diagnostics
+    condition: always()
+    inputs:
+      targetPath: "$(resultsDirectory)"
+      artifact: ui-test-results

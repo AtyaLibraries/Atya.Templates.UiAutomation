@@ -1,0 +1,62 @@
+<Project>
+
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <!--
+      Transitive pinning is intentionally OFF: Playwright pulls a broad
+      transitive graph, and pinning every transitive would be noise that fights
+      Renovate. Direct dependencies are pinned exactly (docs/architecture.md
+      Section 7) and the lock file (RestorePackagesWithLockFile) freezes the
+      transitive closure for reproducible, locked restores.
+    -->
+    <CentralPackageTransitivePinningEnabled>false</CentralPackageTransitivePinningEnabled>
+  </PropertyGroup>
+
+  <!--
+    The exact, verified test stack (docs/architecture.md Section 7 / Section 2).
+    A compatibility matrix (docs/compatibility-matrix.md) records this
+    combination; update it whenever any version here changes.
+  -->
+  <ItemGroup Label="UI automation">
+    <PackageVersion Include="Microsoft.Playwright" Version="1.61.0" />
+    <PackageVersion Include="Microsoft.Playwright.Xunit.v3" Version="1.61.0" />
+  </ItemGroup>
+
+  <ItemGroup Label="Test platform (Microsoft Testing Platform + xUnit v3)">
+    <PackageVersion Include="xunit.v3" Version="3.2.2" />
+    <PackageVersion Include="xunit.v3.extensibility.core" Version="3.2.2" />
+    <PackageVersion Include="xunit.v3.assert" Version="3.2.2" />
+    <!-- MTP core + TRX extension MUST match the version xunit.v3 3.2.2 ships against
+         (1.9.1). The 2.x MTP line is a newer major xunit.v3 3.2.2 does not yet support;
+         pinning it produces a TypeLoadException at test start. -->
+    <PackageVersion Include="Microsoft.Testing.Platform" Version="1.9.1" />
+    <PackageVersion Include="Microsoft.Testing.Extensions.TrxReport" Version="1.9.1" />
+  </ItemGroup>
+
+  <ItemGroup Label="Composition, configuration, logging">
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.9" />
+  </ItemGroup>
+
+  <!--
+    Excel adapter (docs/architecture.md Section 18.2) — Phase 4, opt-in. Pinned
+    here per Section 7 so the version is governed, but no Phase 1 project
+    references it.
+  -->
+  <ItemGroup Label="Spreadsheet adapter (opt-in, Phase 4)">
+    <PackageVersion Include="ClosedXML" Version="0.105.0" />
+  </ItemGroup>
+
+  <!--
+    Default Atya dependency (Section 31.4): analyzers only, referenced with
+    PrivateAssets="all" from Directory.Build.props.
+  -->
+  <ItemGroup Label="Atya governance (analyzers only)">
+    <PackageVersion Include="Atya.Governance.CodeQuality" Version="1.1.0" />
+  </ItemGroup>
+
+</Project>

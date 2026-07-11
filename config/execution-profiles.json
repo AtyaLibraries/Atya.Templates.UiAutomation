@@ -1,0 +1,30 @@
+{
+  "Profiles": {
+    "chromium-headless": {
+      "Name": "chromium-headless",
+      "Browser": "Chromium",
+      "Headless": true,
+      "MaxParallelTests": 4
+    },
+    "chromium-debug": {
+      "Name": "chromium-debug",
+      "Browser": "Chromium",
+      "Headless": false,
+      "MaxParallelTests": 1,
+      "Trace": "Always",
+      "Video": "Always"
+    },
+    "firefox-headless": {
+      "Name": "firefox-headless",
+      "Browser": "Firefox",
+      "Headless": true,
+      "MaxParallelTests": 4
+    },
+    "webkit-headless": {
+      "Name": "webkit-headless",
+      "Browser": "WebKit",
+      "Headless": true,
+      "MaxParallelTests": 4
+    }
+  }
+}

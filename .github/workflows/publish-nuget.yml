@@ -1,0 +1,40 @@
+name: Trigger central NuGet publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+# Mirrors the fleet publish flow: a v* tag dispatches publish-package to AtyaLibraries/publisher,
+# which packs and pushes to nuget.org via OIDC trusted publishing behind the manual production
+# gate. This repo never pushes to nuget.org directly.
+jobs:
+  trigger-publisher:
+    name: Trigger central publisher
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Dispatch publish request
+        uses: actions/github-script@v7
+        env:
+          SOURCE_REPOSITORY: ${{ github.repository }}
+          SOURCE_REF: ${{ github.ref_name }}
+          SOURCE_SOLUTION: ./UiAutomation.sln
+          SOURCE_PACKAGE_PROJECT: ./Atya.Templates.UiAutomation.csproj
+        with:
+          github-token: ${{ secrets.PUBLISHER_DISPATCH_TOKEN }}
+          script: |
+            await github.rest.repos.createDispatchEvent({
+              owner: 'AtyaLibraries',
+              repo: 'publisher',
+              event_type: 'publish-package',
+              client_payload: {
+                repository: process.env.SOURCE_REPOSITORY,
+                ref: process.env.SOURCE_REF,
+                solution: process.env.SOURCE_SOLUTION,
+                'package-project': process.env.SOURCE_PACKAGE_PROJECT
+              }
+            });

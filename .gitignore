@@ -1,0 +1,24 @@
+## .NET
+bin/
+obj/
+[Bb]in/
+[Oo]bj/
+*.user
+.vs/
+.idea/
+
+## Test + Playwright artifacts
+TestResults/
+artifacts/
+**/playwright-report/
+**/.playwright/
+**/*.trx
+
+## Local diagnostics / raw capture (never committed — see Section 22.4)
+raw-artifacts/
+storage-state/
+
+## Local secrets (never committed). The `local` ENVIRONMENT overlay
+## (config/appsettings.local.json) IS committed — it is an environment, not a secret store.
+*.env
+secrets.json

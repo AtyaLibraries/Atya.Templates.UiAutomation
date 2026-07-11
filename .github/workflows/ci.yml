@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [development, master]
+  pull_request:
+    branches: [development, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# NOTE: unlike a NuGet library repo, this template's tests launch a real browser, so it does
+# NOT use the managed reusable dotnet-package-ci.yml (which has coverage gates and no browser
+# install). The repo still carries atya-managed=true for org rulesets/branch protection.
+jobs:
+  build-and-test:
+    name: Build + framework tests (chromium)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore (locked)
+        run: dotnet restore UiAutomation.sln --locked-mode
+
+      - name: Build
+        run: dotnet build UiAutomation.sln --configuration Release --no-restore
+
+      - name: Install Playwright chromium
+        run: pwsh tests/UiAutomation.Tests/bin/Release/net10.0/playwright.ps1 install chromium --with-deps
+
+      - name: Framework tests (unit permutation + browser mechanics + spike)
+        run: >
+          dotnet test tests/UiAutomation.Framework.Tests/UiAutomation.Framework.Tests.csproj
+          --configuration Release --no-build
+          --filter-not-trait "RequiresApplication=true"
+          --report-trx --minimum-expected-tests 1
+        env:
+          TEST_PROFILE: chromium-headless
+
+  pack:
+    name: Pack template package
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Pack (verification only)
+        run: dotnet pack Atya.Templates.UiAutomation.csproj -p:PackageVersion=0.0.0-ci -o artifacts/pack

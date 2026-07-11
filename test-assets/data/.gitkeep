@@ -1,0 +1,2 @@
+# Domain test-data (JSON `*Case` files) live here — see docs/architecture.md Section 18.
+# Per-case xUnit discovery (Section 18.3.1) is a Phase 2 item.

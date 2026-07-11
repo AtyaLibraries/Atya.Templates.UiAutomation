@@ -1,0 +1,61 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+
+[*.{json,yml,yaml}]
+indent_size = 2
+
+[*.cs]
+# Modern C# idioms used throughout this solution.
+csharp_style_namespace_declarations = file_scoped:warning
+csharp_prefer_braces = true:warning
+dotnet_style_require_accessibility_modifiers = for_non_interface_members:suggestion
+
+#
+# Analyzer baseline for the generated solution.
+#
+# Atya.Governance.CodeQuality supplies the correctness analyzers (CA*) plus StyleCop
+# (SA*). Because this template ships on plain Microsoft.NET.Sdk (docs/architecture.md
+# Section 31.3), it does NOT inherit Atya.Build.Sdk's base .editorconfig, so the StyleCop
+# rules that fight records / `required` / primary constructors are tuned down here while the
+# meaningful correctness analyzers stay on. Adjust to taste in your solution.
+#
+
+# StyleCop rules that conflict with the deliberate style of this codebase.
+dotnet_diagnostic.SA0001.severity = none   # XML comment analysis disabled by config
+dotnet_diagnostic.SA1101.severity = none   # prefix local calls with this.
+dotnet_diagnostic.SA1200.severity = none   # using directives outside namespace
+dotnet_diagnostic.SA1201.severity = none   # element ordering (nested types, fields)
+dotnet_diagnostic.SA1202.severity = none   # access-level ordering
+dotnet_diagnostic.SA1204.severity = none   # static-before-instance ordering
+dotnet_diagnostic.SA1206.severity = none   # not aware of the `required` modifier
+dotnet_diagnostic.SA1309.severity = none   # field names begin with underscore (we use _x)
+dotnet_diagnostic.SA1313.severity = none   # record positional params are PascalCase here
+dotnet_diagnostic.SA1413.severity = none   # trailing comma in multi-line initializers
+dotnet_diagnostic.SA1600.severity = none   # elements must be documented
+dotnet_diagnostic.SA1601.severity = none   # partial elements documented
+dotnet_diagnostic.SA1602.severity = none   # enum values documented
+dotnet_diagnostic.SA1633.severity = none   # file header
+dotnet_diagnostic.SA1516.severity = none   # blank lines between elements
+
+# IDE style rules tuned for this codebase.
+dotnet_diagnostic.IDE0005.severity = none   # unnecessary usings (needs doc-file gen)
+dotnet_diagnostic.IDE0040.severity = none   # accessibility modifiers (interfaces/records)
+
+# The StyleCop build bundled with Atya.Governance.CodeQuality predates .NET 10 / C# 14 and
+# throws (AD0001) on some modern syntax (single-line lambdas, primary constructors). Those
+# layout rules cannot run reliably here, so analyzer-crash reports are suppressed; the .NET
+# correctness analyzers (CA*) remain fully enforced.
+dotnet_diagnostic.AD0001.severity = none
+
+[tests/**/*.cs]
+# Test method names use underscores for readability; standard xUnit convention.
+dotnet_diagnostic.CA1707.severity = none
+dotnet_diagnostic.CA2007.severity = none   # ConfigureAwait not required in test bodies
+dotnet_diagnostic.CA1515.severity = none   # test types may be public

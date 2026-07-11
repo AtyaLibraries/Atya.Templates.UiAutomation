@@ -1,0 +1,30 @@
+{
+  "Users": [
+    {
+      "Key": "admin-primary",
+      "Credentials": {
+        "Username": "admin@example.com",
+        "PasswordSecretName": "UIA_USER_ADMIN_PRIMARY"
+      },
+      "Role": "Admin",
+      "Permissions": [ "requests.read", "requests.approve" ],
+      "Metadata": { "tenant": "acme" },
+      "SessionCapacity": 1,
+      "ConcurrencyMode": "Exclusive",
+      "IsActive": true
+    },
+    {
+      "Key": "readonly-primary",
+      "Credentials": {
+        "Username": "viewer@example.com",
+        "PasswordSecretName": "UIA_USER_READONLY_PRIMARY"
+      },
+      "Role": "ReadOnly",
+      "Permissions": [ "requests.read" ],
+      "Metadata": { "tenant": "acme" },
+      "SessionCapacity": 3,
+      "ConcurrencyMode": "ReadOnlyShared",
+      "IsActive": true
+    }
+  ]
+}

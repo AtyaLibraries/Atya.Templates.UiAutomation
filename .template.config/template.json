@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Arsen Asulyan",
+  "classifications": [ "Test", "UI Automation", "Playwright", "Solution" ],
+  "identity": "Atya.Templates.UiAutomation",
+  "name": "Atya UI Automation",
+  "shortName": "atya-ui-automation",
+  "sourceName": "UiAutomation",
+  "preferNameDirectory": true,
+  "description": "A .NET 10 Playwright + xUnit v3 + Microsoft Testing Platform UI-automation solution: actor-first scenario lifecycle, user leasing, environment/profile configuration, diagnostics capture policy, and a mandatory execution-wrapper permutation suite. --name sets the generated root namespace (e.g. Contoso.Shop.UiAutomation).",
+  "tags": {
+    "language": "C#",
+    "type": "solution"
+  },
+  "primaryOutputs": [
+    { "path": "UiAutomation.sln" }
+  ],
+  "sources": [
+    {
+      "source": "./",
+      "target": "./",
+      "rename": {
+        "README.template.md": "README.md"
+      },
+      "exclude": [
+        ".template.config/**",
+        "Atya.Templates.UiAutomation.csproj",
+        "PACKAGE_README.md",
+        "README.md",
+        "docs/architecture.md",
+        "CHANGELOG.md",
+        ".github/**",
+        "renovate.json",
+        "template-smoke-test.ps1",
+        "**/[Bb]in/**",
+        "**/[Oo]bj/**",
+        "**/[Aa]rtifacts/**",
+        "artifacts/**",
+        "TestResults/**",
+        "raw-artifacts/**",
+        "storage-state/**",
+        "probe/**",
+        ".git",
+        ".git/**",
+        ".vs",
+        ".vs/**",
+        ".idea",
+        ".idea/**"
+      ]
+    }
+  ],
+  "symbols": {
+    "skipRestore": {
+      "type": "parameter",
+      "datatype": "bool",
+      "displayName": "Skip post-generation restore",
+      "description": "If true, 'dotnet restore' is not run after template generation.",
+      "defaultValue": "false"
+    }
+  },
+  "postActions": [
+    {
+      "id": "restore",
+      "condition": "(!skipRestore)",
+      "description": "Restore NuGet packages",
+      "manualInstructions": [
+        { "text": "Run 'dotnet restore' to restore packages." }
+      ],
+      "actionId": "210D431B-A78B-4D2F-B762-4ED3E3EA9025",
+      "continueOnError": true
+    }
+  ]
+}
