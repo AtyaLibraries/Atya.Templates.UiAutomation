@@ -26,10 +26,12 @@ jobs:
           global-json-file: global.json
 
       - name: Pack the template
-        run: dotnet pack Atya.Templates.UiAutomation.csproj -p:PackageVersion=0.0.0-test -o artifacts/pack
+        # MinVer owns the release version (from the v* tag); override it for a deterministic
+        # CI filename so the install step below is version-independent.
+        run: dotnet pack Atya.Templates.UiAutomation.csproj -p:MinVerVersionOverride=0.0.0-test -o artifacts/pack
 
       - name: Install the template from the produced nupkg
-        run: dotnet new install artifacts/pack/Atya.Templates.UiAutomation.0.0.0-test.nupkg
+        run: dotnet new install "$(ls artifacts/pack/Atya.Templates.UiAutomation.*.nupkg)"
 
       - name: Instantiate
         run: dotnet new atya-ui-automation --name Sample.App.UiAutomation --output artifacts/sample --skipRestore
