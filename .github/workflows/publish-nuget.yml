@@ -22,7 +22,12 @@ jobs:
         env:
           SOURCE_REPOSITORY: ${{ github.repository }}
           SOURCE_REF: ${{ github.ref_name }}
-          SOURCE_SOLUTION: ./UiAutomation.sln
+          # The publisher's build-pack action packs the package-project with --no-build, so it
+          # must be restored+built by the "solution" step. For a template package the
+          # package-project is a root csproj deliberately excluded from UiAutomation.sln (which
+          # is the CONSUMER's generated solution), so we pass the package project itself as the
+          # solution — it restores, builds, and packs the same project.
+          SOURCE_SOLUTION: ./Atya.Templates.UiAutomation.csproj
           SOURCE_PACKAGE_PROJECT: ./Atya.Templates.UiAutomation.csproj
         with:
           github-token: ${{ secrets.PUBLISHER_DISPATCH_TOKEN }}

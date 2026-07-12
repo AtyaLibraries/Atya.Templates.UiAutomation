@@ -33,11 +33,14 @@
     <NoWarn>$(NoWarn);CS2008;NU5128;NU5110;NU5111;AD0001</NoWarn>
     <MinVerTagPrefix>v</MinVerTagPrefix>
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
+    <!-- The central publisher restores this project in locked mode (it is passed as the
+         build "solution"), so it needs its own committed lock file. -->
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
 
   <ItemGroup>
     <Content Include="**/*"
-             Exclude="bin/**;obj/**;artifacts/**;**/bin/**;**/obj/**;**/artifacts/**;TestResults/**;raw-artifacts/**;probe/**;.git;.git/**;.vs;.vs/**;.idea;.idea/**;PACKAGE_README.md;README.md;docs/architecture.md;CHANGELOG.md;Atya.Templates.UiAutomation.csproj;template-smoke-test.ps1;.github/workflows/test-template.yml" />
+             Exclude="bin/**;obj/**;artifacts/**;**/bin/**;**/obj/**;**/artifacts/**;TestResults/**;raw-artifacts/**;probe/**;.git;.git/**;.vs;.vs/**;.idea;.idea/**;PACKAGE_README.md;README.md;docs/architecture.md;CHANGELOG.md;Atya.Templates.UiAutomation.csproj;packages.lock.json;template-smoke-test.ps1;.github/workflows/test-template.yml" />
     <None Include="PACKAGE_README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 

@@ -25,6 +25,7 @@
       "exclude": [
         ".template.config/**",
         "Atya.Templates.UiAutomation.csproj",
+        "packages.lock.json",
         "PACKAGE_README.md",
         "README.md",
         "docs/architecture.md",
