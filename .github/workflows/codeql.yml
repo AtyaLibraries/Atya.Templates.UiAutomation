@@ -16,6 +16,6 @@ permissions:
 
 jobs:
   analyze:
-    uses: AtyaLibraries/github-workflows/.github/workflows/codeql-csharp.yml@v1
+    uses: AtyaLibraries/github-workflows/.github/workflows/codeql-csharp.yml@f6190353bf05e780bd2b98a0980fe1a7b0e93a27 # v1
     with:
       solution: ./UiAutomation.sln
