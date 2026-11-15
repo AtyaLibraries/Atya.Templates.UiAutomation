@@ -48,7 +48,7 @@
     references it.
   -->
   <ItemGroup Label="Spreadsheet adapter (opt-in, Phase 4)">
-    <PackageVersion Include="ClosedXML" Version="0.105.0" />
+    <PackageVersion Include="ClosedXML" Version="0.105.1" />
   </ItemGroup>
 
   <!--
