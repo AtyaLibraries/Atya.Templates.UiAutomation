@@ -72,9 +72,9 @@
       },
       "Microsoft.Playwright": {
         "type": "Direct",
-        "requested": "[1.64.1, )",
-        "resolved": "1.64.1",
-        "contentHash": "DO8plHiCCUS/54XZxhsuzGtxI4RkyJ/5XOlVFoT0A0K1jNYdGhntry36ivkPjcCbv0uz6P/PmJ35gUgnAYGbiw==",
+        "requested": "[1.65.1, )",
+        "resolved": "1.65.1",
+        "contentHash": "xJ9Imv5+05KULm2wQPS2w4gVAHg5eByo0P8KixryyE7XpVL8xmuQcvzCqQTYPpJoQLLgpRwe7LibfF1mIBHL1g==",
         "dependencies": {
           "Microsoft.Bcl.AsyncInterfaces": "6.0.0",
           "System.ComponentModel.Annotations": "5.0.0"
@@ -82,12 +82,12 @@
       },
       "Microsoft.Playwright.Xunit.v3": {
         "type": "Direct",
-        "requested": "[1.64.1, )",
-        "resolved": "1.64.1",
-        "contentHash": "ahlKnYe+uXVOTHDVGvUwgtQdCFQKnQn0XZY6hEMHA962E7e15BXe9uP59ntOdKx0kUZJm1s1Dby98z5pSPkMIg==",
+        "requested": "[1.65.1, )",
+        "resolved": "1.65.1",
+        "contentHash": "AxhnaLiTVP6uHLFzRQvAk02ygOx5nE6zN5iQ0a6vHcK1HubLvNFLokKMo5azUVsn/6ofUDJdP9MEB0TzHi4D4w==",
         "dependencies": {
-          "Microsoft.Playwright": "1.64.1",
-          "Microsoft.Playwright.TestAdapter": "1.64.1",
+          "Microsoft.Playwright": "1.65.1",
+          "Microsoft.Playwright.TestAdapter": "1.65.1",
           "xunit.v3.extensibility.core": "1.0.1"
         }
       },
@@ -183,10 +183,10 @@
       },
       "Microsoft.Playwright.TestAdapter": {
         "type": "Transitive",
-        "resolved": "1.64.1",
-        "contentHash": "gpIcatEV972A2MbsK+DlRI4h60x0f3Lh205Gj3Zo1jj00QXA3uupVYl9rQAU78k+xgKnqmtWGCos1svdSsqlIg==",
+        "resolved": "1.65.1",
+        "contentHash": "6KefbQwz8DmQJOnX7UXHDcjDv6xZNTeqkaMjZRijluN6ml+9FMa/SEHiSByuf452UasNX2vSZzo/4YrluJmg9g==",
         "dependencies": {
-          "Microsoft.Playwright": "1.64.1",
+          "Microsoft.Playwright": "1.65.1",
           "Microsoft.TestPlatform.ObjectModel": "17.3.0"
         }
       },
