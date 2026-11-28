@@ -29,7 +29,7 @@ dotnet new atya-ui-automation --name Contoso.Shop.UiAutomation
 
 ## Release
 
-Versioning starts at tag `v1.0.0` through the standard fleet chain (development → master → `v*` tag → central publisher → nuget.org via OIDC, with the production gate approved manually). NuGet versions are immutable; nothing unverified ships.
+Release flow: merge to `main`, tag the commit `v<SemVer>`, then run `publish.yml` in `AtyaLibraries/publisher` (nuget.org via OIDC). NuGet versions are immutable; nothing unverified ships.
 
 ## Governance
 
